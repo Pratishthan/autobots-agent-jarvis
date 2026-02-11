@@ -1,0 +1,55 @@
+# Git
+.git
+.gitignore
+
+# Python cache
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache
+.ruff_cache
+.mypy_cache
+.pytype
+
+# Coverage and test reports
+.coverage
+coverage.xml
+htmlcov
+.tox
+.nox
+
+# Virtual environments
+.venv
+venv
+ENV
+env
+
+# Environment files (handled via docker-compose)
+.env
+.envrc
+
+# Persistent data directories (mounted as volumes)
+
+# Chainlit cache
+.chainlit/.cache
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Documentation
+docs
+
+# Build artifacts
+build
+dist
+*.egg-info
+
+# Node modules (if any)
+node_modules
+
+# Test files (not needed in production image)
+tests

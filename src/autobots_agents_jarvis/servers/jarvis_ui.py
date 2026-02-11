@@ -1,16 +1,16 @@
 # ABOUTME: Jarvis-specific Chainlit entry point for the jarvis_chat use case.
 # ABOUTME: Wires tracing, OAuth, and the shared streaming helper.
 
-import logging
 from typing import TYPE_CHECKING, Any
 
 import chainlit as cl
-from autobots_devtools_shared_lib.dynagent.agents.base_agent import create_base_agent
-from autobots_devtools_shared_lib.dynagent.observability.tracing import (
+from autobots_devtools_shared_lib.common.observability.logging_utils import get_logger
+from autobots_devtools_shared_lib.common.observability.tracing import (
     flush_tracing,
     get_langfuse_handler,
     init_tracing,
 )
+from autobots_devtools_shared_lib.dynagent.agents.base_agent import create_base_agent
 from autobots_devtools_shared_lib.dynagent.ui.ui_utils import stream_agent_events
 from dotenv import load_dotenv
 from langfuse import propagate_attributes
@@ -24,8 +24,7 @@ if TYPE_CHECKING:
 # Load environment variables from .env file
 load_dotenv()
 
-logger = logging.getLogger(__name__)
-logging.basicConfig(level=logging.INFO)
+logger = get_logger(__file__)
 
 # Application name for tracing and identification
 APP_NAME = "jarvis_chat"
@@ -66,7 +65,7 @@ async def start():
     """Initialize the chat session with the welcome agent."""
     # Create agent instance once and store it in session
     init_tracing()
-    agent = create_base_agent(agent_name="welcome_agent")
+    agent = create_base_agent(agent_name=APP_NAME)
     cl.user_session.set("agent", agent)
     await cl.Message(content="Hello! I'm Jarvis. How can I help you today?").send()
 

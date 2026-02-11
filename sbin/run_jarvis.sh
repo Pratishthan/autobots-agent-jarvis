@@ -20,4 +20,4 @@ echo "Starting Jarvis on http://localhost:$PORT"
 echo "Config directory: $DYNAGENT_CONFIG_ROOT_DIR"
 
 # Run Chainlit
-chainlit run src/autobots_agents_jarvis/jarvis_ui.py --port "$PORT" --host 0.0.0.0
+chainlit run src/autobots_agents_jarvis/servers/jarvis_ui.py --port "$PORT" --host 0.0.0.0

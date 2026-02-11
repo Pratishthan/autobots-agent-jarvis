@@ -61,7 +61,7 @@ DOCKER_CONTAINER_NAME = autobots-agent-jarvis
 
 # Chainlit configuration
 CHAINLIT_PORT = 1337
-CHAINLIT_APP = src/autobots_agents_jarvis/jarvis_ui.py
+CHAINLIT_APP = src/autobots_agents_jarvis/servers/jarvis_ui.py
 
 # Install project dependencies
 install:

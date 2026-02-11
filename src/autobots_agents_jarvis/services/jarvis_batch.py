@@ -3,11 +3,11 @@
 
 import logging
 
+from autobots_devtools_shared_lib.common.observability.tracing import init_tracing
 from autobots_devtools_shared_lib.dynagent.agents.batch import (
     BatchResult,
     batch_invoker,
 )
-from autobots_devtools_shared_lib.dynagent.observability.tracing import init_tracing
 from dotenv import load_dotenv
 
 logger = logging.getLogger(__name__)

@@ -51,7 +51,6 @@ Jarvis is a lightweight multi-agent system with three specialized agents:
    ```bash
    cd autobots-agent-jarvis
    ```
-
 2. **Install dependencies**
 
    ```bash
@@ -62,14 +61,12 @@ Jarvis is a lightweight multi-agent system with three specialized agents:
    # Or using poetry directly
    poetry install
    ```
-
 3. **Configure environment**
 
    ```bash
    cp .env.example .env
    # Edit .env and add your GOOGLE_API_KEY
    ```
-
 4. **Run the application**
 
    ```bash
@@ -80,9 +77,8 @@ Jarvis is a lightweight multi-agent system with three specialized agents:
    ./sbin/run_jarvis.sh
 
    # Or directly
-   chainlit run src/autobots_agents_jarvis/jarvis_ui.py --port 1337
+   chainlit run src/autobots_agents_jarvis/servers/jarvis_ui.py --port 1337
    ```
-
 5. **Open in browser**
 
    Navigate to http://localhost:1337
@@ -92,6 +88,7 @@ Jarvis is a lightweight multi-agent system with three specialized agents:
 ### Welcome Agent
 
 The default entry point that:
+
 - Greets users with a friendly message
 - Explains available agents
 - Routes to appropriate specialized agents
@@ -101,6 +98,7 @@ The default entry point that:
 ### Joke Agent
 
 Specialized in humor delivery:
+
 - Tells jokes from multiple categories (programming, general, knock-knock, dad-joke)
 - Returns structured JSON output
 - Supports batch processing
@@ -114,6 +112,7 @@ Specialized in humor delivery:
 ### Weather Agent
 
 Provides weather information:
+
 - Current weather for supported cities
 - Multi-day forecasts
 - Structured JSON output with temperature, conditions, and forecasts
@@ -298,6 +297,7 @@ make docker-up
 ### Tests failing with import errors
 
 Make sure to install the package in development mode:
+
 ```bash
 cd ..
 make install-dev
@@ -306,6 +306,7 @@ make install-dev
 ### Agent not found errors
 
 Check that `DYNAGENT_CONFIG_ROOT_DIR` points to `configs/jarvis`:
+
 ```bash
 export DYNAGENT_CONFIG_ROOT_DIR=configs/jarvis
 ```
@@ -313,6 +314,7 @@ export DYNAGENT_CONFIG_ROOT_DIR=configs/jarvis
 ### Missing Google API key
 
 Set your API key in `.env`:
+
 ```
 GOOGLE_API_KEY=your-actual-key-here
 ```
