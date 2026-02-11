@@ -20,6 +20,7 @@ agents:
       - "get_joke_categories"
       - "handoff"
       - "get_agent_list"
+      - "output_format_converter_tool"
 
   weather_agent:
     prompt: "02-weather"
