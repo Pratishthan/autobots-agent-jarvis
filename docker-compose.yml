@@ -19,10 +19,9 @@ services:
       - CHAINLIT_AUTH_SECRET=${CHAINLIT_AUTH_SECRET:-}
       - DEBUG=${DEBUG:-false}
       - LLM_MODEL=${LLM_MODEL:-gemini-2.0-flash}
-      - DYNAGENT_CONFIG_ROOT_DIR=/app/configs/jarvis
+      - DYNAGENT_CONFIG_ROOT_DIR=/app/agent_configs/jarvis
     volumes:
-      - ./src:/app/src:ro
-      - ./configs:/app/configs:ro
+      - ./agent_configs:/app/agent_configs:ro
     restart: unless-stopped
     depends_on:
       langfuse-web:

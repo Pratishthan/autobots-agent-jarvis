@@ -9,7 +9,7 @@ authors = [
 license = {text = "MIT"}
 requires-python = ">=3.12,<4.0.0"
 dependencies = [
-    "autobots-devtools-shared-lib==0.1.4",
+    "autobots-devtools-shared-lib==0.1.4a4",
     "chainlit>=2.9.6",
     "langchain>=1.0.0",
     "langchain-google-genai>=4.2.0",
@@ -30,13 +30,19 @@ dev = [
 ]
 
 [tool.poetry]
+name = "autobots-agent-jarvis"
+version = "0.1.0"
+description = "Jarvis - Multi-agent AI Assistant Demo"
+authors = ["PK <pro.kamath@gmail.com>"]
 packages = [
     { include = "autobots_agents_jarvis", from = "src" }
 ]
 
 [tool.poetry.dependencies]
+autobots-devtools-shared-lib = {version = "==0.1.4a4", allow-prereleases = true}
 # Local path dependency (Poetry-specific)
-autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}
+# autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}
+
 
 [tool.ruff]
 line-length = 100

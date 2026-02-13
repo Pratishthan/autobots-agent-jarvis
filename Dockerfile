@@ -1,28 +1,31 @@
-# Dockerfile for autobots-agents-bro
-# Multi-stage build
-# Build context: autobots-agents-bro directory
-# Usage: docker-compose up bro-chat
-# Or: docker build -t autobots-agents-bro .
+# Dockerfile for autobots-agents-jarvis
+# Multi-stage build with Poetry
+# Build context: autobots-agents-jarvis directory
+# Usage: make docker-build
+# Or: make docker-build-no-cache
 
-# Stage 1: Builder - Generate requirements from pyproject.toml
+# Stage 1: Builder - Install dependencies with Poetry
 FROM python:3.12-slim-bookworm AS builder
 
+# Install Poetry
+ENV POETRY_VERSION=2.3.2 \
+    POETRY_HOME="/opt/poetry" \
+    POETRY_NO_INTERACTION=1 \
+    POETRY_VIRTUALENVS_IN_PROJECT=true \
+    POETRY_VIRTUALENVS_CREATE=true \
+    POETRY_CACHE_DIR=/tmp/poetry_cache
+
+RUN pip install --no-cache-dir poetry==${POETRY_VERSION}
+
 # Set working directory
-WORKDIR /build
+WORKDIR /app
 
-# Copy only pyproject.toml to extract dependencies
-COPY pyproject.toml .
+# Copy dependency files first for better layer caching
+COPY pyproject.toml poetry.lock* ./
 
-# Generate requirements.txt from [project.dependencies]
-# This will include autobots-devtools-shared-lib from PyPI
-RUN echo "autobots-devtools-shared-lib==0.1.4a2" > requirements.txt && \
-    echo "chainlit>=2.9.6" >> requirements.txt && \
-    echo "langchain>=1.0.0" >> requirements.txt && \
-    echo "langchain-google-genai>=4.2.0" >> requirements.txt && \
-    echo "langfuse>=3.12.1" >> requirements.txt && \
-    echo "pydantic-settings>=2.10.1" >> requirements.txt && \
-    echo "python-dotenv>=1.1.1" >> requirements.txt && \
-    echo "pyyaml>=6.0.3" >> requirements.txt
+# Install dependencies (without dev dependencies, without root package)
+RUN poetry install --no-root --only main && \
+    rm -rf $POETRY_CACHE_DIR
 
 # Stage 2: Runtime
 FROM python:3.12-slim-bookworm AS runtime
@@ -30,8 +33,6 @@ FROM python:3.12-slim-bookworm AS runtime
 # Set environment variables for Python optimization
 ENV PYTHONUNBUFFERED=1 \
     PYTHONDONTWRITEBYTECODE=1 \
-    PIP_NO_CACHE_DIR=1 \
-    PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PYTHONPATH=/app/src
 
 # Install curl for health checks
@@ -47,15 +48,12 @@ RUN groupadd -g 1000 app && \
 # Set working directory
 WORKDIR /app
 
+# Copy virtual environment from builder
+COPY --from=builder /app/.venv /app/.venv
+
 # Create directories for volume mounts with correct ownership
 RUN mkdir -p configs && \
     chown -R app:app configs
-
-# Copy requirements from builder
-COPY --from=builder /build/requirements.txt .
-
-# Install all dependencies from PyPI (including autobots-devtools-shared-lib)
-RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code (preserve src/ structure for PYTHONPATH)
 COPY src ./src
@@ -66,6 +64,9 @@ RUN chown -R app:app /app
 
 # Switch to non-root user
 USER app
+
+# Activate virtual environment by adding to PATH
+ENV PATH="/app/.venv/bin:$PATH"
 
 # Expose Chainlit port
 EXPOSE 1337
