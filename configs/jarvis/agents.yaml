@@ -32,3 +32,5 @@ agents:
       - "get_forecast"
       - "handoff"
       - "get_agent_list"
+      - "read_file_tool"
+      - "list_files_tool"
