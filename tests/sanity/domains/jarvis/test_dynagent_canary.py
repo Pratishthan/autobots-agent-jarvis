@@ -153,7 +153,7 @@ def test_ui_chat_script(jarvis_registered):
             "playwright not installed; run: pip install playwright && playwright install chromium"
         )
 
-    jarvis_dir = Path(__file__).resolve().parent.parent.parent
+    jarvis_dir = Path(__file__).resolve().parent.parent.parent.parent.parent
     script_path = Path(__file__).resolve().parent / "fixtures" / "chat_script.yaml"
     with script_path.open() as f:
         script = yaml.safe_load(f)

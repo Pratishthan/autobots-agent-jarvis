@@ -70,7 +70,7 @@ PATHS_TO_REMOVE = [
     "sbin/run_sales.sh",
     "sbin/run_all_domains.sh",
     "tests/unit/domains",
-    "tests/sanity",
+    "tests/integration/domains",
 ]
 
 
@@ -79,6 +79,10 @@ def derive_names(name: str) -> dict[str, str]:
     if not re.match(r"^[a-z][a-z0-9]*(-[a-z0-9]+)*$", name):
         print(f"Error: name '{name}' must be lowercase with hyphens (e.g., 'kbe-pay', 'my-app')")
         sys.exit(1)
+
+    # Strip 'autobots-' prefix if the user already included it to avoid doubling
+    if name.startswith("autobots-"):
+        name = name[len("autobots-") :]
 
     snake = name.replace("-", "_")
     parts = name.split("-")

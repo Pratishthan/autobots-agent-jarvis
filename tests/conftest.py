@@ -93,24 +93,6 @@ def oauth_settings() -> JarvisSettings:
 
 
 @pytest.fixture
-def jarvis_registered():
-    """Register Jarvis tools; reset after test."""
-    from autobots_devtools_shared_lib.dynagent import AgentMeta
-    from autobots_devtools_shared_lib.dynagent.tools.tool_registry import (
-        _reset_usecase_tools,
-    )
-
-    from autobots_agents_jarvis.domains.jarvis.tools import register_jarvis_tools
-
-    _reset_usecase_tools()
-    AgentMeta.reset()
-    register_jarvis_tools()
-    yield
-    _reset_usecase_tools()
-    AgentMeta.reset()
-
-
-@pytest.fixture
 def clean_env() -> Generator[None, None, None]:
     """Temporarily clear environment variables for testing."""
     env_vars = [
