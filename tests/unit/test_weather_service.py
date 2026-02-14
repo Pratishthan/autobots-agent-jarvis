@@ -2,7 +2,7 @@
 
 import pytest
 
-from autobots_agents_jarvis.services.weather_service import get_forecast, get_weather
+from autobots_agents_jarvis.domains.jarvis.services import get_forecast, get_weather
 
 
 def test_get_weather_valid_location():

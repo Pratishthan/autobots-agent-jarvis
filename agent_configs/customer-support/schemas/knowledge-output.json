@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "KnowledgeOutput",
+  "description": "Structured output for knowledge base operations",
+  "type": "object",
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": ["search", "get_article"],
+      "description": "Type of knowledge base operation"
+    },
+    "query": {
+      "type": "string",
+      "description": "Search query or article ID requested"
+    },
+    "results": {
+      "type": "array",
+      "description": "List of matching articles",
+      "items": {
+        "type": "object",
+        "properties": {
+          "article_id": {
+            "type": "string",
+            "description": "Unique identifier for the article"
+          },
+          "title": {
+            "type": "string",
+            "description": "Article title"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Brief summary of the article"
+          },
+          "relevance_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "How relevant this article is to the query (0-1)"
+          }
+        },
+        "required": ["article_id", "title"]
+      }
+    },
+    "article_content": {
+      "type": "string",
+      "description": "Full content of a retrieved article (for get_article operation)"
+    },
+    "total_results": {
+      "type": "integer",
+      "description": "Total number of matching articles found"
+    }
+  },
+  "required": ["operation"]
+}

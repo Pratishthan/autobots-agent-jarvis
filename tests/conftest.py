@@ -100,7 +100,7 @@ def jarvis_registered():
         _reset_usecase_tools,
     )
 
-    from autobots_agents_jarvis.tools.jarvis_tools import register_jarvis_tools
+    from autobots_agents_jarvis.domains.jarvis.tools import register_jarvis_tools
 
     _reset_usecase_tools()
     AgentMeta.reset()

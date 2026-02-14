@@ -9,7 +9,7 @@ from autobots_devtools_shared_lib.common.observability.trace_metadata import Tra
 from autobots_devtools_shared_lib.dynagent import ainvoke_agent, invoke_agent
 from dotenv import load_dotenv
 
-from autobots_agents_jarvis.tools.jarvis_tools import register_jarvis_tools
+from autobots_agents_jarvis.domains.jarvis.tools import register_jarvis_tools
 
 logger = get_logger(__name__)
 load_dotenv()

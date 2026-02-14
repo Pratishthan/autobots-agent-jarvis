@@ -6,7 +6,7 @@ import pytest
 from autobots_devtools_shared_lib.dynagent import Dynagent
 from langchain.tools import ToolRuntime
 
-from autobots_agents_jarvis.tools.jarvis_tools import (
+from autobots_agents_jarvis.domains.jarvis.tools import (
     tell_joke,
 )
 

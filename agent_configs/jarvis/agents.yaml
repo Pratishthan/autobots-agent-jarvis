@@ -14,7 +14,6 @@ agents:
     prompt: "01-joke"
     output_schema: "joke-output.json"
     batch_enabled: true
-    approach: "direct"
     tools:
       - "tell_joke"
       - "get_joke_categories"
@@ -26,7 +25,6 @@ agents:
     prompt: "02-weather"
     output_schema: "weather-output.json"
     batch_enabled: false
-    approach: "template"
     tools:
       - "get_weather"
       - "get_forecast"

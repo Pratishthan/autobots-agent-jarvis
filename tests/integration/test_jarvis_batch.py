@@ -2,7 +2,7 @@
 
 import pytest
 
-from autobots_agents_jarvis.services.jarvis_batch import jarvis_batch
+from autobots_agents_jarvis.domains.jarvis.jarvis_batch import jarvis_batch
 
 
 @pytest.fixture(autouse=True)

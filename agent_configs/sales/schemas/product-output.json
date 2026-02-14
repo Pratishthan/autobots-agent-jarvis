@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ProductOutput",
+  "description": "Structured output for product recommendation operations",
+  "type": "object",
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": ["catalog", "recommend", "inventory"],
+      "description": "Type of product operation performed"
+    },
+    "products": {
+      "type": "array",
+      "description": "List of products",
+      "items": {
+        "type": "object",
+        "properties": {
+          "product_id": {
+            "type": "string",
+            "description": "Unique product identifier"
+          },
+          "name": {
+            "type": "string",
+            "description": "Product name"
+          },
+          "category": {
+            "type": "string",
+            "enum": ["Enterprise", "SMB", "Starter"],
+            "description": "Product category/tier"
+          },
+          "price": {
+            "type": "number",
+            "description": "Product price"
+          },
+          "features": {
+            "type": "array",
+            "description": "List of product features",
+            "items": {
+              "type": "string"
+            }
+          },
+          "in_stock": {
+            "type": "boolean",
+            "description": "Whether product is in stock"
+          },
+          "lead_time_days": {
+            "type": "integer",
+            "description": "Lead time in days if not in stock"
+          },
+          "match_score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "How well this product matches requirements (0-1)"
+          }
+        },
+        "required": ["product_id", "name", "category"]
+      }
+    },
+    "total_results": {
+      "type": "integer",
+      "description": "Total number of products found"
+    },
+    "category_filter": {
+      "type": "string",
+      "description": "Category filter applied (if any)"
+    }
+  },
+  "required": ["operation", "products"]
+}

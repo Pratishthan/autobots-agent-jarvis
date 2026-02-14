@@ -1,0 +1,37 @@
+# ABOUTME: Customer Support domain agent configuration
+# ABOUTME: Defines 3 agents: support coordinator, ticket handler, and knowledge base agents
+
+agents:
+  support_coordinator:
+    prompt: "00-support-coordinator"
+    is_default: true
+    batch_enabled: false
+    tools:
+      - "handoff"
+      - "get_agent_list"
+
+  ticket_agent:
+    prompt: "01-ticket-handler"
+    output_schema: "ticket-output.json"
+    batch_enabled: true
+    tools:
+      - "create_ticket"
+      - "update_ticket"
+      - "search_tickets"
+      - "validate_email"      # Shared validation tool from common/
+      - "validate_phone"      # Shared validation tool from common/
+      - "handoff"
+      - "get_agent_list"
+      - "output_format_converter_tool"
+
+  knowledge_agent:
+    prompt: "02-knowledge-base"
+    output_schema: "knowledge-output.json"
+    batch_enabled: false
+    tools:
+      - "search_knowledge_base"
+      - "get_article"
+      - "validate_url"        # Shared validation tool from common/
+      - "handoff"
+      - "get_agent_list"
+      - "output_format_converter_tool"

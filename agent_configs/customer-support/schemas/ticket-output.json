@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "TicketOutput",
+  "description": "Structured output for ticket operations",
+  "type": "object",
+  "properties": {
+    "ticket_id": {
+      "type": "string",
+      "description": "Unique identifier for the ticket"
+    },
+    "title": {
+      "type": "string",
+      "description": "Brief title/subject of the ticket"
+    },
+    "description": {
+      "type": "string",
+      "description": "Detailed description of the issue"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["open", "in-progress", "resolved", "closed"],
+      "description": "Current status of the ticket"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "medium", "high", "urgent"],
+      "description": "Priority level of the ticket"
+    },
+    "created_at": {
+      "type": "string",
+      "description": "Timestamp when the ticket was created"
+    },
+    "updated_at": {
+      "type": "string",
+      "description": "Timestamp of last update"
+    },
+    "operation": {
+      "type": "string",
+      "enum": ["create", "update", "search"],
+      "description": "Type of operation performed"
+    }
+  },
+  "required": ["ticket_id", "status", "operation"]
+}

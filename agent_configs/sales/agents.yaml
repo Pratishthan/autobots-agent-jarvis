@@ -1,0 +1,29 @@
+agents:
+  sales_coordinator:
+    prompt: "00-sales-coordinator"
+    is_default: true
+    batch_enabled: false
+    tools:
+      - "handoff"
+      - "get_agent_list"
+
+  lead_qualification_agent:
+    prompt: "01-lead-qualification"
+    output_schema: "lead-output.json"
+    batch_enabled: true
+    tools:
+      - "qualify_lead"
+      - "get_lead_score"
+      - "handoff"
+      - "get_agent_list"
+
+  product_recommendation_agent:
+    prompt: "02-product-recommendations"
+    output_schema: "product-output.json"
+    batch_enabled: false
+    tools:
+      - "get_product_catalog"
+      - "recommend_products"
+      - "check_inventory"
+      - "handoff"
+      - "get_agent_list"

@@ -1,4 +1,4 @@
-.PHONY: help install install-dev install-hooks test test-cov test-fast test-one lint format check-format type-check clean all-checks build publish update-deps chainlit-dev docker-build docker-build-no-cache docker-run docker-run-detached docker-up docker-down docker-logs docker-logs-compose docker-shell docker-stop docker-ps docker-restart docker-clean docker-remove docker-tag docker-push docker-pull docker-deploy docker-size
+.PHONY: help install install-dev install-hooks test test-cov test-fast test-one lint format check-format type-check clean all-checks build publish update-deps chainlit-dev chainlit-customer-support chainlit-sales chainlit-all docker-build docker-build-no-cache docker-run docker-run-detached docker-up docker-down docker-logs docker-logs-compose docker-shell docker-stop docker-ps docker-restart docker-clean docker-remove docker-tag docker-push docker-pull docker-deploy docker-size
 
 # Default target
 help:
@@ -20,7 +20,10 @@ help:
 	@echo "  make build            - Build the package"
 	@echo "  make publish          - Publish package to PyPI"
 	@echo "  make update-deps      - Update dependencies"
-	@echo "  make chainlit-dev     - Run Chainlit UI in development mode"
+	@echo "  make chainlit-dev     - Run Jarvis Chainlit UI (port 1337)"
+	@echo "  make chainlit-customer-support - Run Customer Support UI (port 1338)"
+	@echo "  make chainlit-sales   - Run Sales UI (port 1339)"
+	@echo "  make chainlit-all     - Run all domains simultaneously"
 	@echo ""
 	@echo "Docker commands:"
 	@echo "  make docker-build     - Build Docker image"
@@ -61,7 +64,11 @@ DOCKER_CONTAINER_NAME = autobots-agent-jarvis
 
 # Chainlit configuration
 CHAINLIT_PORT = 1337
-CHAINLIT_APP = src/autobots_agents_jarvis/servers/jarvis_ui.py
+CHAINLIT_APP = src/autobots_agents_jarvis/domains/jarvis/server.py
+CHAINLIT_CUSTOMER_SUPPORT_PORT = 1338
+CHAINLIT_CUSTOMER_SUPPORT_APP = src/autobots_agents_jarvis/domains/customer_support/server.py
+CHAINLIT_SALES_PORT = 1339
+CHAINLIT_SALES_APP = src/autobots_agents_jarvis/domains/sales/server.py
 
 # Install project dependencies
 install:
@@ -153,9 +160,21 @@ export-requirements:
 	$(POETRY) export -f requirements.txt --output requirements.txt --without-hashes
 	$(POETRY) export -f requirements.txt --output requirements-dev.txt --with dev --without-hashes
 
-# Run Chainlit UI in development mode
+# Run Jarvis Chainlit UI in development mode
 chainlit-dev:
-	$(CHAINLIT) run $(CHAINLIT_APP) --port $(CHAINLIT_PORT) --host 0.0.0.0
+	$(CHAINLIT) run $(CHAINLIT_APP) --port $(CHAINLIT_PORT) --host 127.0.0.1
+
+# Run Customer Support Chainlit UI
+chainlit-customer-support:
+	DYNAGENT_CONFIG_ROOT_DIR=agent_configs/customer-support $(CHAINLIT) run $(CHAINLIT_CUSTOMER_SUPPORT_APP) --port $(CHAINLIT_CUSTOMER_SUPPORT_PORT) --host 127.0.0.1
+
+# Run Sales Chainlit UI
+chainlit-sales:
+	DYNAGENT_CONFIG_ROOT_DIR=agent_configs/sales $(CHAINLIT) run $(CHAINLIT_SALES_APP) --port $(CHAINLIT_SALES_PORT) --host 127.0.0.1
+
+# Run all domains simultaneously
+chainlit-all:
+	./sbin/run_all_domains.sh
 
 #
 # Docker Commands

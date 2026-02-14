@@ -11,12 +11,12 @@ import pytest
 import yaml
 from langchain_core.messages import AIMessage
 
-from autobots_agents_jarvis.services.call_invoke_agent import (
+from autobots_agents_jarvis.domains.jarvis.call_invoke_agent import (
     call_invoke_agent_async,
     call_invoke_agent_sync,
 )
-from autobots_agents_jarvis.services.get_schema_for_agent import get_schema_for_agent
-from autobots_agents_jarvis.services.jarvis_batch import jarvis_batch
+from autobots_agents_jarvis.domains.jarvis.get_schema_for_agent import get_schema_for_agent
+from autobots_agents_jarvis.domains.jarvis.jarvis_batch import jarvis_batch
 from tests.conftest import requires_google_api
 
 # Pytest marker for sanity tests
@@ -109,7 +109,7 @@ def _start_chainlit_no_auth(jarvis_dir: Path, port: int = 1337) -> subprocess.Po
     env["OAUTH_GITHUB_CLIENT_SECRET"] = ""
     env["CHAINLIT_AUTH_SECRET"] = ""
     env["DYNAGENT_CONFIG_ROOT_DIR"] = str(jarvis_dir / "agent_configs" / "jarvis")
-    app_path = jarvis_dir / "src" / "autobots_agents_jarvis" / "servers" / "jarvis_ui.py"
+    app_path = jarvis_dir / "src" / "autobots_agents_jarvis" / "domains" / "jarvis" / "server.py"
     return subprocess.Popen(  # noqa: S603
         [
             sys.executable,

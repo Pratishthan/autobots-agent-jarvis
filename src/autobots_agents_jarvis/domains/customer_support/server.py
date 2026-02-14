@@ -1,4 +1,4 @@
-# ABOUTME: Jarvis-specific Chainlit entry point for the jarvis_chat use case.
+# ABOUTME: Customer Support-specific Chainlit entry point for the customer_support_chat use case.
 # ABOUTME: Wires tracing, OAuth, and the shared streaming helper.
 
 import os
@@ -12,9 +12,10 @@ from autobots_devtools_shared_lib.dynagent import create_base_agent
 from autobots_devtools_shared_lib.dynagent.ui import stream_agent_events
 from dotenv import load_dotenv
 
+from autobots_agents_jarvis.common.tools.validation_tools import register_validation_tools
+from autobots_agents_jarvis.common.utils.formatting import format_structured_output
 from autobots_agents_jarvis.configs.settings import init_jarvis_settings
-from autobots_agents_jarvis.tools.jarvis_tools import register_jarvis_tools
-from autobots_agents_jarvis.utils.formatting import format_structured_output
+from autobots_agents_jarvis.domains.customer_support.tools import register_customer_support_tools
 
 if TYPE_CHECKING:
     from langchain_core.runnables import RunnableConfig
@@ -25,13 +26,14 @@ load_dotenv()
 logger = get_logger(__file__)
 
 # Application name for tracing and identification
-APP_NAME = "jarvis_chat"
+APP_NAME = "customer_support_chat"
 
-# Register Jarvis settings so shared-lib (dynagent) uses the same instance.
+# Register settings so shared-lib (dynagent) uses the same instance.
 init_jarvis_settings()
 
 # Registration must precede AgentMeta.instance() (called inside create_base_agent).
-register_jarvis_tools()
+register_validation_tools()  # Register shared validation tools from common/
+register_customer_support_tools()  # Register domain-specific tools
 
 
 # Check if OAuth is configured
@@ -85,7 +87,7 @@ def _get_user_identifier() -> str:
 
 @cl.on_chat_start
 async def start():
-    """Initialize the chat session with the welcome agent."""
+    """Initialize the chat session with the default customer support coordinator agent."""
     # Create agent instance once and store it in session
     init_tracing()
     base_agent = create_base_agent()
@@ -103,7 +105,9 @@ async def start():
     )
     cl.user_session.set("trace_metadata", trace_metadata)
 
-    await cl.Message(content="Hello! I'm Jarvis. How can I help you today?").send()
+    await cl.Message(
+        content="Hello! I'm your Customer Support assistant. How can I help you today?"
+    ).send()
 
 
 @cl.on_message

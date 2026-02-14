@@ -6,11 +6,11 @@ import logging
 from autobots_devtools_shared_lib.dynagent import Dynagent
 from langchain.tools import ToolRuntime, tool
 
-from autobots_agents_jarvis.services.joke_service import get_joke, list_categories
-from autobots_agents_jarvis.services.weather_service import (
+from autobots_agents_jarvis.domains.jarvis.services import (
     get_forecast as weather_get_forecast,
 )
-from autobots_agents_jarvis.services.weather_service import (
+from autobots_agents_jarvis.domains.jarvis.services import get_joke, list_categories
+from autobots_agents_jarvis.domains.jarvis.services import (
     get_weather as weather_get_weather,
 )
 

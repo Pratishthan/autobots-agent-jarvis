@@ -1,0 +1,56 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "LeadOutput",
+  "description": "Structured output for lead qualification operations",
+  "type": "object",
+  "properties": {
+    "operation": {
+      "type": "string",
+      "enum": ["qualify", "get_score"],
+      "description": "Type of lead operation performed"
+    },
+    "lead_id": {
+      "type": "string",
+      "description": "Unique identifier for the lead"
+    },
+    "company": {
+      "type": "string",
+      "description": "Company name"
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "description": "Lead qualification score (0-100)"
+    },
+    "category": {
+      "type": "string",
+      "enum": ["hot", "warm", "cold"],
+      "description": "Lead quality category"
+    },
+    "budget": {
+      "type": "string",
+      "description": "Budget range or amount"
+    },
+    "timeline": {
+      "type": "string",
+      "description": "Expected timeline for decision/implementation"
+    },
+    "team_size": {
+      "type": "integer",
+      "description": "Number of team members/users"
+    },
+    "qualified_at": {
+      "type": "string",
+      "description": "Timestamp when lead was qualified"
+    },
+    "next_steps": {
+      "type": "array",
+      "description": "Recommended next steps for this lead",
+      "items": {
+        "type": "string"
+      }
+    }
+  },
+  "required": ["operation", "lead_id"]
+}

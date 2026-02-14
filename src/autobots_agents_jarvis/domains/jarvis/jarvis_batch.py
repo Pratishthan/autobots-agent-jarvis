@@ -88,7 +88,7 @@ def jarvis_batch(agent_name: str, records: list[str]) -> BatchResult:
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
-    from autobots_agents_jarvis.tools.jarvis_tools import register_jarvis_tools
+    from autobots_agents_jarvis.domains.jarvis.tools import register_jarvis_tools
 
     register_jarvis_tools()
 
