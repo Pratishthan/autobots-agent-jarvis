@@ -76,7 +76,7 @@ install:
 
 # Install project with dev dependencies
 install-dev:
-	$(POETRY) install
+	$(POETRY) install --extras dev
 
 # Install pre-commit hooks
 install-hooks:
