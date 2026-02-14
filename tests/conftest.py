@@ -13,6 +13,8 @@ _JARVIS_CONFIG_CANDIDATES = [
     Path("agent_configs/jarvis"),
     Path("autobots-agents-jarvis/agent_configs/jarvis"),
     Path("../autobots-agents-jarvis/agent_configs/jarvis"),
+    # Absolute path from conftest location
+    Path(__file__).parent.parent / "agent_configs" / "jarvis",
 ]
 _JARVIS_CONFIG_DIR: Path | None = None
 for _c in _JARVIS_CONFIG_CANDIDATES:
@@ -41,11 +43,18 @@ def _dynagent_env(monkeypatch):
     )
 
     _reset_agent_config()
+    # Reset the cached settings instance so it will re-read env vars on next access
+    import autobots_devtools_shared_lib.dynagent.config.dynagent_settings as settings_module
+
+    settings_module._settings = None
+
     if _JARVIS_CONFIG_DIR is not None:
         monkeypatch.setenv("DYNAGENT_CONFIG_ROOT_DIR", str(_JARVIS_CONFIG_DIR))
         monkeypatch.setenv("SCHEMA_BASE", str(_JARVIS_CONFIG_DIR / "schemas"))
     yield
     _reset_agent_config()
+    # Reset settings after test
+    settings_module._settings = None
 
 
 @pytest.fixture
@@ -116,5 +125,4 @@ def clean_env() -> Generator[None, None, None]:
         if value is not None:
             os.environ[var] = value
         else:
-            os.environ.pop(var, None)
             os.environ.pop(var, None)
