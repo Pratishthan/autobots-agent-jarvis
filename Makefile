@@ -1,4 +1,4 @@
-.PHONY: help install install-dev install-hooks test test-cov test-fast test-one lint format check-format type-check clean all-checks build publish update-deps chainlit-dev chainlit-customer-support chainlit-sales chainlit-all docker-build docker-build-no-cache docker-run docker-run-detached docker-up docker-down docker-logs docker-logs-compose docker-shell docker-stop docker-ps docker-restart docker-clean docker-remove docker-tag docker-push docker-pull docker-deploy docker-size
+.PHONY: help install install-dev install-hooks test test-cov test-fast test-one lint format check-format type-check clean all-checks build publish update-deps chainlit-dev chainlit-customer-support chainlit-sales chainlit-all sanity docker-build docker-build-no-cache docker-run docker-run-detached docker-up docker-down docker-logs docker-logs-compose docker-shell docker-stop docker-ps docker-restart docker-clean docker-remove docker-tag docker-push docker-pull docker-deploy docker-size
 
 # Default target
 help:
@@ -175,6 +175,10 @@ chainlit-sales:
 # Run all domains simultaneously
 chainlit-all:
 	./sbin/run_all_domains.sh
+
+# Run sanity tests
+sanity:
+	./sbin/sanity_test.sh
 
 #
 # Docker Commands
