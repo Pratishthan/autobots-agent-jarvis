@@ -1,29 +1,12 @@
 # ABOUTME: Pydantic settings for jarvis-chat configuration.
-# ABOUTME: Loads environment variables for API keys, Langfuse, and OAuth settings.
+# ABOUTME: Extends DynagentSettings with Jarvis-specific API keys, OAuth, and app settings.
 
+from autobots_devtools_shared_lib.dynagent import DynagentSettings, set_dynagent_settings
 from pydantic import Field
-from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
-class Settings(BaseSettings):
-    """Jarvis application settings loaded from environment variables."""
-
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore",
-    )
-
-    # Google API key for agents (Gemini)
-    google_api_key: str = Field(default="", description="Google API key for Gemini")
-
-    # Langfuse observability settings
-    langfuse_public_key: str = Field(default="", description="Langfuse public key")
-    langfuse_secret_key: str = Field(default="", description="Langfuse secret key")
-    langfuse_host: str = Field(
-        default="https://cloud.langfuse.com", description="Langfuse host URL"
-    )
-    langfuse_enabled: bool = Field(default=True, description="Enable Langfuse tracing")
+class JarvisSettings(DynagentSettings):
+    """Jarvis application settings: Dynagent base + Jarvis-specific env vars."""
 
     # GitHub OAuth settings for Chainlit
     oauth_github_client_id: str = Field(default="", description="GitHub OAuth client ID")
@@ -35,16 +18,6 @@ class Settings(BaseSettings):
     port: int = Field(default=1337, description="Application port")
     debug: bool = Field(default=False, description="Enable debug mode")
 
-    # Model configuration
-    llm_model: str = Field(
-        default="gemini-2.0-flash",
-        description="LLM model for agents",
-    )
-
-    def is_langfuse_configured(self) -> bool:
-        """Check if Langfuse is properly configured."""
-        return bool(self.langfuse_enabled and self.langfuse_public_key and self.langfuse_secret_key)
-
     def is_oauth_configured(self) -> bool:
         """Check if GitHub OAuth is properly configured."""
         return bool(
@@ -54,6 +27,13 @@ class Settings(BaseSettings):
         )
 
 
-def get_settings() -> Settings:
-    """Get cached settings instance."""
-    return Settings()
+def get_jarvis_settings() -> JarvisSettings:
+    """Get Jarvis settings instance."""
+    return JarvisSettings()
+
+
+def init_jarvis_settings() -> JarvisSettings:
+    """Load Jarvis settings and register them with the shared-lib so dynagent uses this instance. Call at app startup."""
+    s = get_jarvis_settings()
+    set_dynagent_settings(s)
+    return s

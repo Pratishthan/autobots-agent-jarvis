@@ -11,6 +11,7 @@ from autobots_devtools_shared_lib.dynagent import create_base_agent
 from autobots_devtools_shared_lib.dynagent.ui import stream_agent_events
 from dotenv import load_dotenv
 
+from autobots_agents_jarvis.configs.settings import init_jarvis_settings
 from autobots_agents_jarvis.tools.jarvis_tools import register_jarvis_tools
 from autobots_agents_jarvis.utils.formatting import format_structured_output
 
@@ -24,6 +25,9 @@ logger = get_logger(__file__)
 
 # Application name for tracing and identification
 APP_NAME = "jarvis_chat"
+
+# Register Jarvis settings so shared-lib (dynagent) uses the same instance.
+init_jarvis_settings()
 
 # Registration must precede AgentMeta.instance() (called inside create_base_agent).
 register_jarvis_tools()

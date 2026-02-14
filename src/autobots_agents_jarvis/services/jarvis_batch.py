@@ -8,8 +8,11 @@ from autobots_devtools_shared_lib.common.observability.tracing import init_traci
 from autobots_devtools_shared_lib.dynagent import BatchResult, batch_invoker
 from dotenv import load_dotenv
 
+from autobots_agents_jarvis.configs.settings import init_jarvis_settings
+
 logger = logging.getLogger(__name__)
 load_dotenv()
+init_jarvis_settings()
 
 # Application name for tracing and identification
 APP_NAME = "jarvis_batch"

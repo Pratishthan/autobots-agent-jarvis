@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pytest
 
-from autobots_agents_jarvis.configs.settings import Settings
+from autobots_agents_jarvis.configs.settings import JarvisSettings
 
 _JARVIS_CONFIG_CANDIDATES = [
     Path("configs/jarvis"),
@@ -49,9 +49,9 @@ def _dynagent_env(monkeypatch):
 
 
 @pytest.fixture
-def test_settings() -> Settings:
+def test_settings() -> JarvisSettings:
     """Create settings for testing with minimal configuration."""
-    return Settings(
+    return JarvisSettings(
         google_api_key=os.environ.get("GOOGLE_API_KEY", "test-google-key"),
         langfuse_enabled=False,
         langfuse_public_key="",
@@ -64,9 +64,9 @@ def test_settings() -> Settings:
 
 
 @pytest.fixture
-def langfuse_settings() -> Settings:
+def langfuse_settings() -> JarvisSettings:
     """Create settings with Langfuse configuration."""
-    return Settings(
+    return JarvisSettings(
         google_api_key=os.environ.get("GOOGLE_API_KEY", "test-google-key"),
         langfuse_enabled=True,
         langfuse_public_key="test-public-key",
@@ -77,9 +77,9 @@ def langfuse_settings() -> Settings:
 
 
 @pytest.fixture
-def oauth_settings() -> Settings:
+def oauth_settings() -> JarvisSettings:
     """Create settings with OAuth configuration."""
-    return Settings(
+    return JarvisSettings(
         google_api_key=os.environ.get("GOOGLE_API_KEY", "test-google-key"),
         langfuse_enabled=False,
         oauth_github_client_id="test-client-id",

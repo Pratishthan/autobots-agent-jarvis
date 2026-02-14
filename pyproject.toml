@@ -9,7 +9,7 @@ authors = [
 license = {text = "MIT"}
 requires-python = ">=3.12,<4.0.0"
 dependencies = [
-    "autobots-devtools-shared-lib==0.1.4a4",
+    "autobots-devtools-shared-lib==0.1.4a5",
     "chainlit>=2.9.6",
     "langchain>=1.0.0",
     "langchain-google-genai>=4.2.0",
@@ -40,7 +40,7 @@ packages = [
 
 [tool.poetry.dependencies]
 # Local path dependency (Poetry-specific)
-# autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}
+autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}
 
 
 [tool.ruff]
