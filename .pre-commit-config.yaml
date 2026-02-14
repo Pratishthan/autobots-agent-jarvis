@@ -1,4 +1,4 @@
-# ABOUTME: Pre-commit hook configuration for autobots-agent-jarvis.
+# ABOUTME: Pre-commit hook configuration for autobots-agents-jarvis.
 # ABOUTME: Enforces code quality with ruff and pyright.
 
 repos:

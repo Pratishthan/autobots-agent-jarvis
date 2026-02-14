@@ -370,7 +370,7 @@ See `.env.example` for all available configuration options:
 ## Project Structure
 
 ```
-autobots-agent-jarvis/
+autobots-agents-jarvis/
 ├── src/autobots_agents_jarvis/
 │   ├── agents/
 │   │   └── jarvis_tools.py          # Tool implementations

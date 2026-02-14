@@ -57,10 +57,10 @@ PYRIGHT = $(VENV)/bin/pyright
 CHAINLIT = $(VENV)/bin/chainlit
 
 # Docker configuration
-DOCKER_IMAGE_NAME = autobots-agent-jarvis
+DOCKER_IMAGE_NAME = autobots-agents-jarvis
 DOCKER_IMAGE_TAG = latest
 DOCKER_REGISTRY = # Set this to your registry (e.g., docker.io/username)
-DOCKER_CONTAINER_NAME = autobots-agent-jarvis
+DOCKER_CONTAINER_NAME = autobots-agents-jarvis
 
 # Chainlit configuration
 CHAINLIT_PORT = 1337

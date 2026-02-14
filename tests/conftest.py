@@ -12,10 +12,10 @@ from autobots_agents_jarvis.configs.settings import JarvisSettings
 _JARVIS_CONFIG_CANDIDATES = [
     Path("agent_configs/jarvis"),
     Path("configs/jarvis"),
-    Path("autobots-agent-jarvis/agent_configs/jarvis"),
-    Path("autobots-agent-jarvis/configs/jarvis"),
-    Path("../autobots-agent-jarvis/agent_configs/jarvis"),
-    Path("../autobots-agent-jarvis/configs/jarvis"),
+    Path("autobots-agents-jarvis/agent_configs/jarvis"),
+    Path("autobots-agents-jarvis/configs/jarvis"),
+    Path("../autobots-agents-jarvis/agent_configs/jarvis"),
+    Path("../autobots-agents-jarvis/configs/jarvis"),
 ]
 _JARVIS_CONFIG_DIR: Path | None = None
 for _c in _JARVIS_CONFIG_CANDIDATES:

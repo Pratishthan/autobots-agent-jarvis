@@ -1,5 +1,5 @@
 [project]
-name = "autobots-agent-jarvis"
+name = "autobots-agents-jarvis"
 version = "0.1.0"
 description = "Jarvis - Multi-agent AI Assistant Demo"
 readme = "README.md"
@@ -31,7 +31,7 @@ dev = [
 ]
 
 [tool.poetry]
-name = "autobots-agent-jarvis"
+name = "autobots-agents-jarvis"
 version = "0.1.0"
 description = "Jarvis - Multi-agent AI Assistant Demo"
 authors = ["PK <pro.kamath@gmail.com>"]
