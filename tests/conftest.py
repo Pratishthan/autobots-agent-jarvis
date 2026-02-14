@@ -13,7 +13,6 @@ _JARVIS_CONFIG_CANDIDATES = [
     Path("agent_configs/jarvis"),
     Path("autobots-agents-jarvis/agent_configs/jarvis"),
     Path("../autobots-agents-jarvis/agent_configs/jarvis"),
-    # Absolute path from conftest location
     Path(__file__).parent.parent / "agent_configs" / "jarvis",
 ]
 _JARVIS_CONFIG_DIR: Path | None = None

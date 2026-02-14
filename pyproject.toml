@@ -41,7 +41,7 @@ packages = [
 
 [tool.poetry.dependencies]
 # Local path dependency (Poetry-specific)
-autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}
+# autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}
 
 
 [tool.ruff]
@@ -113,9 +113,13 @@ pythonVersion = "3.12"
 typeCheckingMode = "basic"
 include = ["src", "tests"]
 exclude = ["**/__pycache__", ".venv"]
-venvPath = ".."
+# venvPath = ".."
+# venv = ".venv"
+# extraPaths = ["src", "../autobots-devtools-shared-lib/src"]
+venvPath = "."
 venv = ".venv"
-extraPaths = ["src", "../autobots-devtools-shared-lib/src"]
+extraPaths = ["src"]
+
 
 # Coverage configuration
 [tool.coverage.run]
