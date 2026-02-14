@@ -4,8 +4,12 @@
 import asyncio
 from typing import Any
 
-from autobots_devtools_shared_lib.common.observability.logging_utils import get_logger
+from autobots_devtools_shared_lib.common.observability.logging_utils import (
+    get_logger,
+    set_conversation_id,
+)
 from autobots_devtools_shared_lib.common.observability.trace_metadata import TraceMetadata
+from autobots_devtools_shared_lib.common.observability.tracing import init_tracing
 from autobots_devtools_shared_lib.dynagent import ainvoke_agent, invoke_agent
 from dotenv import load_dotenv
 
@@ -16,6 +20,7 @@ load_dotenv()
 
 
 register_jarvis_tools()
+init_tracing()
 
 
 def call_invoke_agent_sync(
@@ -44,6 +49,11 @@ def call_invoke_agent_sync(
         >>> result = call_invoke_agent_sync("joke_agent", "Tell me a joke")
         >>> print(result["structured_response"])
     """
+
+    if session_id:
+        set_conversation_id(session_id)
+        logger.info(f"🔑 Using custom session_id: {session_id}")
+
     logger.info(f"🔵 Starting SYNC invocation for agent: {agent_name}")
     logger.info(f"📝 User message: {user_message}")
 
@@ -120,6 +130,11 @@ async def call_invoke_agent_async(
         >>> result = await call_invoke_agent_async("joke_agent", "Tell me a joke")
         >>> print(result["structured_response"])
     """
+
+    if session_id:
+        set_conversation_id(session_id)
+        logger.info(f"🔑 Using custom session_id: {session_id}")
+
     logger.info(f"🟢 Starting ASYNC invocation for agent: {agent_name}")
     logger.info(f"📝 User message: {user_message}")
 

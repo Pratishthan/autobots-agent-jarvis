@@ -1,8 +1,10 @@
 # ABOUTME: Jarvis-scoped batch entry point — validates against Jarvis's agent set.
 # ABOUTME: Delegates to dynagent's batch_invoker after the Jarvis gate passes.
 
-import logging
-
+from autobots_devtools_shared_lib.common.observability.logging_utils import (
+    get_logger,
+    set_conversation_id,
+)
 from autobots_devtools_shared_lib.common.observability.trace_metadata import TraceMetadata
 from autobots_devtools_shared_lib.common.observability.tracing import init_tracing
 from autobots_devtools_shared_lib.dynagent import BatchResult, batch_invoker
@@ -10,7 +12,7 @@ from dotenv import load_dotenv
 
 from autobots_agents_jarvis.configs.settings import init_jarvis_settings
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 load_dotenv()
 init_jarvis_settings()
 
@@ -68,6 +70,7 @@ def jarvis_batch(agent_name: str, records: list[str]) -> BatchResult:
         user_id="unknown_user",
         tags=[APP_NAME],
     )
+    set_conversation_id(agent_name)
 
     # Delegate to batch_invoker with Jarvis metadata
     result = batch_invoker(agent_name, records, enable_tracing=True, trace_metadata=trace_metadata)

@@ -1,17 +1,16 @@
 # ABOUTME: Sales use-case tools — tools for lead qualification and product recommendations.
 # ABOUTME: Wraps sales services for use by agents.
 
-import logging
 
+from autobots_devtools_shared_lib.common.observability.logging_utils import (
+    get_logger,
+    set_conversation_id,
+)
 from autobots_devtools_shared_lib.dynagent import Dynagent
 from langchain.tools import ToolRuntime, tool
 
-from autobots_agents_jarvis.domains.sales.services import (
-    check_inventory as service_check_inventory,
-)
-from autobots_agents_jarvis.domains.sales.services import (
-    get_lead_score as service_get_lead_score,
-)
+from autobots_agents_jarvis.domains.sales.services import check_inventory as service_check_inventory
+from autobots_agents_jarvis.domains.sales.services import get_lead_score as service_get_lead_score
 from autobots_agents_jarvis.domains.sales.services import (
     get_product_catalog as service_get_product_catalog,
 )
@@ -20,7 +19,7 @@ from autobots_agents_jarvis.domains.sales.services import (
     recommend_products as service_recommend_products,
 )
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 # --- @tool wrappers for Lead Qualification Operations ---
@@ -46,6 +45,7 @@ def qualify_lead(
         A formatted message with lead qualification details
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Qualifying lead for session {session_id}: {company}")
 
     lead = service_qualify_lead(company, budget, timeline, team_size)
@@ -78,6 +78,7 @@ def get_lead_score(runtime: ToolRuntime[None, Dynagent], lead_id: str) -> str:
         A formatted message with lead details or error message
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Getting lead score for session {session_id}: {lead_id}")
 
     lead = service_get_lead_score(lead_id)
@@ -115,6 +116,7 @@ def get_product_catalog(runtime: ToolRuntime[None, Dynagent], category: str | No
         A formatted list of products
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Getting product catalog for session {session_id}: category={category}")
 
     products = service_get_product_catalog(category)
@@ -158,6 +160,7 @@ def recommend_products(runtime: ToolRuntime[None, Dynagent], requirements: str) 
         A formatted list of recommended products with match scores
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Recommending products for session {session_id}: {requirements[:50]}...")
 
     recommendations = service_recommend_products(requirements, max_results=3)
@@ -205,6 +208,7 @@ def check_inventory(runtime: ToolRuntime[None, Dynagent], product_id: str) -> st
         A formatted message with inventory details or error message
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Checking inventory for session {session_id}: {product_id}")
 
     inventory = service_check_inventory(product_id)

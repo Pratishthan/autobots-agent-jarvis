@@ -1,20 +1,18 @@
 # ABOUTME: Jarvis use-case tools — the 4 tools that Jarvis registers.
 # ABOUTME: Provides joke and weather functionality for demonstration purposes.
 
-import logging
-
+from autobots_devtools_shared_lib.common.observability.logging_utils import (
+    get_logger,
+    set_conversation_id,
+)
 from autobots_devtools_shared_lib.dynagent import Dynagent
 from langchain.tools import ToolRuntime, tool
 
-from autobots_agents_jarvis.domains.jarvis.services import (
-    get_forecast as weather_get_forecast,
-)
+from autobots_agents_jarvis.domains.jarvis.services import get_forecast as weather_get_forecast
 from autobots_agents_jarvis.domains.jarvis.services import get_joke, list_categories
-from autobots_agents_jarvis.domains.jarvis.services import (
-    get_weather as weather_get_weather,
-)
+from autobots_agents_jarvis.domains.jarvis.services import get_weather as weather_get_weather
 
-logger = logging.getLogger(__name__)
+logger = get_logger(__name__)
 
 
 # --- @tool wrappers ---
@@ -31,6 +29,7 @@ def tell_joke(runtime: ToolRuntime[None, Dynagent], category: str) -> str:
         A formatted joke string
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Telling joke for session {session_id}, category: {category}")
 
     joke_data = get_joke(category)
@@ -62,6 +61,7 @@ def get_weather(runtime: ToolRuntime[None, Dynagent], location: str) -> str:
         Formatted weather information
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Getting weather for session {session_id}, location: {location}")
 
     weather_data = weather_get_weather(location)
@@ -88,6 +88,7 @@ def get_forecast(runtime: ToolRuntime[None, Dynagent], location: str, days: int 
         Formatted weather forecast
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     logger.info(f"Getting forecast for session {session_id}, location: {location}, days: {days}")
 
     forecast_data = weather_get_forecast(location, days)

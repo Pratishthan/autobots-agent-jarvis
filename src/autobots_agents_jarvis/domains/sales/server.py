@@ -5,7 +5,10 @@ import os
 from typing import TYPE_CHECKING, Any
 
 import chainlit as cl
-from autobots_devtools_shared_lib.common.observability.logging_utils import get_logger
+from autobots_devtools_shared_lib.common.observability.logging_utils import (
+    get_logger,
+    set_conversation_id,
+)
 from autobots_devtools_shared_lib.common.observability.trace_metadata import TraceMetadata
 from autobots_devtools_shared_lib.common.observability.tracing import flush_tracing, init_tracing
 from autobots_devtools_shared_lib.dynagent import create_base_agent
@@ -101,6 +104,7 @@ async def start():
         user_id=user_id,
         tags=[APP_NAME],
     )
+    set_conversation_id(cl.context.session.thread_id)
     cl.user_session.set("trace_metadata", trace_metadata)
 
     await cl.Message(
@@ -111,6 +115,8 @@ async def start():
 @cl.on_message
 async def on_message(message: cl.Message):
     """Handle incoming messages from the user."""
+    set_conversation_id(cl.context.session.thread_id)
+
     config: RunnableConfig = {
         "configurable": {
             "thread_id": cl.context.session.thread_id,
