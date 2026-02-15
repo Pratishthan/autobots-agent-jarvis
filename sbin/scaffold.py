@@ -325,6 +325,116 @@ def rename_paths(
                 print(f"Renamed: {rel_old} -> {rel_new}")
 
 
+_STANDALONE_PYRIGHT_ENTRY = "entry: bash -c '.venv/bin/pyright src'"
+
+
+def apply_standalone_repo_config(project_dir: Path, *, dry_run: bool = False) -> None:
+    """Apply standalone-repo config: local .venv, no shared-lib, pyright from repo root.
+
+    Edits .pre-commit-config.yaml, Makefile, and pyproject.toml so the project
+    uses a venv in the repo root and does not depend on a parent monorepo.
+    """
+    # 1. .pre-commit-config.yaml: set pyright hook to .venv/bin/pyright src
+    precommit = project_dir / ".pre-commit-config.yaml"
+    if precommit.exists():
+        try:
+            content = precommit.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, PermissionError):
+            pass
+        else:
+            new_lines = []
+            for line in content.splitlines():
+                if (
+                    "entry:" in line
+                    and "pyright" in line
+                    and ("cd " in line or "/src'" in line or '/src"' in line)
+                ):
+                    indent = line[: len(line) - len(line.lstrip())]
+                    new_lines.append(indent + _STANDALONE_PYRIGHT_ENTRY)
+                else:
+                    new_lines.append(line)
+            new_content = "\n".join(new_lines) + ("\n" if content.endswith("\n") else "")
+            if new_content != content:
+                if dry_run:
+                    print(
+                        "[DRY RUN] Would update .pre-commit-config.yaml: pyright entry -> standalone"
+                    )
+                else:
+                    precommit.write_text(new_content, encoding="utf-8")
+                    print("Updated: .pre-commit-config.yaml (pyright entry)")
+
+    # 2. Makefile: VENV = ../.venv -> VENV = .venv
+    makefile = project_dir / "Makefile"
+    if makefile.exists():
+        try:
+            content = makefile.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, PermissionError):
+            pass
+        else:
+            if "VENV = ../.venv" in content:
+                if dry_run:
+                    print("[DRY RUN] Would update Makefile: VENV -> .venv")
+                else:
+                    content = content.replace("VENV = ../.venv", "VENV = .venv")
+                    makefile.write_text(content, encoding="utf-8")
+                    print("Updated: Makefile (VENV)")
+
+    # 3. pyproject.toml: comment shared-lib dep; switch pyright to standalone block
+    pyproject = project_dir / "pyproject.toml"
+    if pyproject.exists():
+        try:
+            content = pyproject.read_text(encoding="utf-8")
+        except (UnicodeDecodeError, PermissionError):
+            pass
+        else:
+            changed = False
+            # Comment out shared-lib path dependency if not already commented
+            shared_lib_line = 'autobots-devtools-shared-lib = {path = "../autobots-devtools-shared-lib", develop = true}'
+            if shared_lib_line in content and "# " + shared_lib_line not in content:
+                content = content.replace(shared_lib_line, "# " + shared_lib_line)
+                changed = True
+            # In [tool.pyright]: comment monorepo lines, uncomment standalone lines
+            in_pyright = False
+            result_lines = []
+            monorepo_uncommented = (
+                'venvPath = ".."',
+                'venv = ".venv"',
+                'extraPaths = ["src", "../autobots-devtools-shared-lib/src"]',
+            )
+            standalone_commented = (
+                '# venvPath = "."',
+                '# venv = ".venv"',
+                '# extraPaths = ["src"]',
+            )
+            for line in content.splitlines():
+                if line.strip() == "[tool.pyright]":
+                    in_pyright = True
+                    result_lines.append(line)
+                    continue
+                if in_pyright and line.strip().startswith("["):
+                    in_pyright = False
+                if in_pyright:
+                    stripped = line.strip()
+                    if stripped in monorepo_uncommented:
+                        indent = line[: len(line) - len(line.lstrip())]
+                        result_lines.append(indent + "# " + stripped)
+                        changed = True
+                        continue
+                    if stripped in standalone_commented:
+                        indent = line[: len(line) - len(line.lstrip())]
+                        result_lines.append(indent + stripped[2:].lstrip())  # drop "# "
+                        changed = True
+                        continue
+                result_lines.append(line)
+            if changed:
+                content = "\n".join(result_lines) + ("\n" if content.endswith("\n") else "")
+                if dry_run:
+                    print("[DRY RUN] Would update pyproject.toml: standalone venv and pyright")
+                else:
+                    pyproject.write_text(content, encoding="utf-8")
+                    print("Updated: pyproject.toml (standalone config)")
+
+
 def scaffold(args: argparse.Namespace) -> None:
     """Main scaffolding logic — transforms the repo in-place."""
     names = derive_names(args.name)
@@ -368,6 +478,9 @@ def scaffold(args: argparse.Namespace) -> None:
 
     # Step 4: Rename directories and files
     rename_paths(project_dir, names, domain_names, dry_run=dry_run)
+
+    # Step 4.5: Apply standalone-repo config (local .venv, no shared-lib, pyright from repo root)
+    apply_standalone_repo_config(project_dir, dry_run=dry_run)
 
     # Step 5: Post-processing overrides
     if not dry_run:
