@@ -28,7 +28,6 @@ def tell_joke(runtime: ToolRuntime[None, Dynagent], category: str) -> str:
     """
     session_id = runtime.state.get("session_id", "default")
     set_conversation_id(session_id)
-    set_conversation_id(session_id)
     logger.info(f"Telling joke for session {session_id}, category: {category}")
 
     joke_data = get_joke(category)
@@ -61,7 +60,6 @@ def get_weather(runtime: ToolRuntime[None, Dynagent], location: str) -> str:
     """
     session_id = runtime.state.get("session_id", "default")
     set_conversation_id(session_id)
-    set_conversation_id(session_id)
     logger.info(f"Getting weather for session {session_id}, location: {location}")
 
     weather_data = weather_get_weather(location)
@@ -88,7 +86,6 @@ def get_forecast(runtime: ToolRuntime[None, Dynagent], location: str, days: int 
         Formatted weather forecast
     """
     session_id = runtime.state.get("session_id", "default")
-    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Getting forecast for session {session_id}, location: {location}, days: {days}")
 
