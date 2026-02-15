@@ -30,8 +30,8 @@ repos:
     hooks:
       - id: pyright
         name: pyright
-        entry: bash -c 'cd "$(git rev-parse --show-toplevel)/.." && .venv/bin/pyright autobots-agents-jarvis/src'  # MONOREPO
-        # entry: bash -c '.venv/bin/pyright src'  # STANDALONE
+        entry: bash -c 'cd "$(git rev-parse --show-toplevel)/../.venv/bin/pyright autobots-agents-jarvis/src'  # MONOREPO
+        # entry: bash -c '"$(git rev-parse --show-toplevel)/.venv/bin/pyright" src'  # STANDALONE
         language: system
         types: [python]
         files: ^src/
@@ -41,7 +41,7 @@ repos:
       - id: pytest
         name: pytest
         entry: bash -c '"$(git rev-parse --show-toplevel)/../.venv/bin/pytest" tests -q'  # MONOREPO
-        # entry: bash -c '".venv/bin/pytest" tests -q'  # STANDALONE
+        # entry: bash -c '"$(git rev-parse --show-toplevel)/.venv/bin/pytest" tests -q' # STANDALONE
         language: system
         pass_filenames: false
         always_run: true

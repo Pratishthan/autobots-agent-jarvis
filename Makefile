@@ -47,8 +47,8 @@ help:
 	@echo "  make docker-size      - Show image size"
 
 # Use system/global poetry and tools from parent venv
-VENV = ../.venv  # MONOREPO
-# VENV = .venv  # STANDALONE
+VENV = ../.venv# MONOREPO
+# VENV = .venv# STANDALONE
 PYTHON = $(VENV)/bin/python
 POETRY = poetry
 PRE_COMMIT = $(VENV)/bin/pre-commit
