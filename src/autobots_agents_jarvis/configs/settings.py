@@ -16,7 +16,7 @@ class AppSettings(DynagentSettings):
 
     # Application settings
     app_name: str = Field(default="", description="Application name")
-    port: int = Field(default=1337, description="Application port")
+    port: int = Field(default=2337, description="Application port")
     debug: bool = Field(default=False, description="Enable debug mode")
 
     def is_oauth_configured(self) -> bool:

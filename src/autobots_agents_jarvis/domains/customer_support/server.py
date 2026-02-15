@@ -108,7 +108,6 @@ async def start():
         tags=[APP_NAME],
     )
     set_conversation_id(cl.context.session.thread_id)
-    set_conversation_id(cl.context.session.thread_id)
     cl.user_session.set("trace_metadata", trace_metadata)
 
     await cl.Message(
@@ -119,8 +118,6 @@ async def start():
 @cl.on_message
 async def on_message(message: cl.Message):
     """Handle incoming messages from the user."""
-    set_conversation_id(cl.context.session.thread_id)
-
     set_conversation_id(cl.context.session.thread_id)
 
     config: RunnableConfig = {

@@ -43,7 +43,6 @@ def create_ticket(
     """
     session_id = runtime.state.get("session_id", "default")
     set_conversation_id(session_id)
-    set_conversation_id(session_id)
     logger.info(f"Creating ticket for session {session_id}: {title}")
 
     ticket = service_create_ticket(title, description, priority)
@@ -72,7 +71,6 @@ def update_ticket(runtime: ToolRuntime[None, Dynagent], ticket_id: str, status: 
     """
     session_id = runtime.state.get("session_id", "default")
     set_conversation_id(session_id)
-    set_conversation_id(session_id)
     logger.info(f"Updating ticket {ticket_id} for session {session_id}: status={status}")
 
     ticket = service_update_ticket(ticket_id, status)
@@ -99,7 +97,6 @@ def search_tickets(runtime: ToolRuntime[None, Dynagent], query: str) -> str:
         A formatted list of matching tickets or message if none found
     """
     session_id = runtime.state.get("session_id", "default")
-    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Searching tickets for session {session_id}: query={query}")
 
@@ -133,7 +130,6 @@ def search_knowledge_base(runtime: ToolRuntime[None, Dynagent], query: str) -> s
         A formatted list of matching articles with summaries
     """
     session_id = runtime.state.get("session_id", "default")
-    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Searching knowledge base for session {session_id}: query={query}")
 
@@ -171,7 +167,6 @@ def get_article(runtime: ToolRuntime[None, Dynagent], article_id: str) -> str:
         The full article content or error message
     """
     session_id = runtime.state.get("session_id", "default")
-    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Getting article {article_id} for session {session_id}")
 

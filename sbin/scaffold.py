@@ -423,7 +423,7 @@ def scaffold(args: argparse.Namespace) -> None:
     print(f"  Primary domain: {domain_names['domain_snake']}")
     if args.description:
         print(f"  Desc:           {args.description}")
-    if args.port != 1337:
+    if args.port != 2337:
         print(f"  Port:           {args.port}")
     print()
 
@@ -457,23 +457,23 @@ def scaffold(args: argparse.Namespace) -> None:
                 print("Updated description in pyproject.toml")
 
         # Update port if non-default
-        if args.port != 1337:
+        if args.port != 2337:
             makefile = project_dir / "Makefile"
             if makefile.exists():
                 content = makefile.read_text()
-                content = content.replace("CHAINLIT_PORT = 1337", f"CHAINLIT_PORT = {args.port}")
+                content = content.replace("CHAINLIT_PORT = 2337", f"CHAINLIT_PORT = {args.port}")
                 makefile.write_text(content)
 
             for settings_file in project_dir.rglob("settings.py"):
                 content = settings_file.read_text()
-                content = content.replace("default=1337", f"default={args.port}")
+                content = content.replace("default=2337", f"default={args.port}")
                 settings_file.write_text(content)
 
             domain_sn = domain_names["domain_snake"]
             run_script = project_dir / "sbin" / f"run_{domain_sn}.sh"
             if run_script.exists():
                 content = run_script.read_text()
-                content = content.replace("PORT:-1337", f"PORT:-{args.port}")
+                content = content.replace("PORT:-2337", f"PORT:-{args.port}")
                 run_script.write_text(content)
             print(f"Updated port to {args.port}")
 
@@ -526,8 +526,8 @@ def main() -> None:
     parser.add_argument(
         "--port",
         type=int,
-        default=1337,
-        help="Default Chainlit port (default: 1337).",
+        default=2337,
+        help="Default Chainlit port (default: 2337).",
     )
     parser.add_argument(
         "--dry-run",
