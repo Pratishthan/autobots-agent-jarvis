@@ -43,6 +43,7 @@ def qualify_lead(
     """
     session_id = runtime.state.get("session_id", "default")
     set_conversation_id(session_id)
+    set_conversation_id(session_id)
     logger.info(f"Qualifying lead for session {session_id}: {company}")
 
     lead = service_qualify_lead(company, budget, timeline, team_size)
@@ -75,6 +76,7 @@ def get_lead_score(runtime: ToolRuntime[None, Dynagent], lead_id: str) -> str:
         A formatted message with lead details or error message
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Getting lead score for session {session_id}: {lead_id}")
 
@@ -113,6 +115,7 @@ def get_product_catalog(runtime: ToolRuntime[None, Dynagent], category: str | No
         A formatted list of products
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Getting product catalog for session {session_id}: category={category}")
 
@@ -157,6 +160,7 @@ def recommend_products(runtime: ToolRuntime[None, Dynagent], requirements: str) 
         A formatted list of recommended products with match scores
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Recommending products for session {session_id}: {requirements[:50]}...")
 
@@ -205,6 +209,7 @@ def check_inventory(runtime: ToolRuntime[None, Dynagent], product_id: str) -> st
         A formatted message with inventory details or error message
     """
     session_id = runtime.state.get("session_id", "default")
+    set_conversation_id(session_id)
     set_conversation_id(session_id)
     logger.info(f"Checking inventory for session {session_id}: {product_id}")
 

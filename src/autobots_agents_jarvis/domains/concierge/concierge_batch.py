@@ -69,6 +69,7 @@ def concierge_batch(agent_name: str, records: list[str]) -> BatchResult:
         user_id="BATCH_USER",
         tags=[APP_NAME, agent_name, "batch"],
     )
+    set_conversation_id(agent_name)
 
     # Delegate to batch_invoker with Concierge metadata
     result = batch_invoker(agent_name, records, enable_tracing=True, trace_metadata=trace_metadata)

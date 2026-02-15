@@ -37,9 +37,7 @@ requires_google_api = pytest.mark.skipif(
 @pytest.fixture(autouse=True)
 def _dynagent_env(monkeypatch):
     """Reset agent-config cache and point env vars at the real concierge config."""
-    from autobots_devtools_shared_lib.dynagent.agents.agent_config_utils import (
-        _reset_agent_config,
-    )
+    from autobots_devtools_shared_lib.dynagent.agents.agent_config_utils import _reset_agent_config
 
     _reset_agent_config()
     # Reset the cached settings instance so it will re-read env vars on next access
