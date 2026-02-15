@@ -1,12 +1,14 @@
 # ABOUTME: Concierge-scoped batch entry point — validates against Concierge's agent set.
 # ABOUTME: Delegates to dynagent's batch_invoker after the Concierge gate passes.
 
-from autobots_devtools_shared_lib.common.observability.logging_utils import (
+import uuid
+
+from autobots_devtools_shared_lib.common.observability import (
+    TraceMetadata,
     get_logger,
+    init_tracing,
     set_conversation_id,
 )
-from autobots_devtools_shared_lib.common.observability.trace_metadata import TraceMetadata
-from autobots_devtools_shared_lib.common.observability.tracing import init_tracing
 from autobots_devtools_shared_lib.dynagent import BatchResult, batch_invoker
 from dotenv import load_dotenv
 
@@ -45,6 +47,9 @@ def concierge_batch(agent_name: str, records: list[str]) -> BatchResult:
     Raises:
         ValueError: If agent_name is not batch-enabled or records is empty.
     """
+    set_conversation_id(str(uuid.uuid4()))
+    logger.info(f"concierge_batch starting: agent={agent_name} records={len(records)}")
+
     concierge_agents = _get_concierge_batch_agents()
 
     if agent_name not in concierge_agents:
@@ -56,31 +61,22 @@ def concierge_batch(agent_name: str, records: list[str]) -> BatchResult:
     if not records:
         raise ValueError("records must not be empty")
 
-    # Initialize tracing (one-time singleton)
     init_tracing()
 
     # Concierge entry logging
-    logger.info(
-        "concierge_batch starting: agent=%s records=%d",
-        agent_name,
-        len(records),
-    )
     trace_metadata = TraceMetadata.create(
         app_name=f"{APP_NAME}-batch_invoker",
-        user_id="unknown_user",
-        tags=[APP_NAME],
+        user_id="BATCH_USER",
+        tags=[APP_NAME, agent_name, "batch"],
     )
-    set_conversation_id(agent_name)
 
     # Delegate to batch_invoker with Concierge metadata
     result = batch_invoker(agent_name, records, enable_tracing=True, trace_metadata=trace_metadata)
 
     # Concierge exit logging
     logger.info(
-        "concierge_batch complete: agent=%s successes=%d failures=%d",
-        agent_name,
-        len(result.successes),
-        len(result.failures),
+        f"concierge_batch complete: agent={agent_name} successes={len(result.successes)} "
+        f"failures={len(result.failures)}"
     )
 
     return result

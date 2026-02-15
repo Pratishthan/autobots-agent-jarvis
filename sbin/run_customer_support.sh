@@ -14,7 +14,7 @@ cd "$PROJECT_ROOT"
 export DYNAGENT_CONFIG_ROOT_DIR="${DYNAGENT_CONFIG_ROOT_DIR:-agent_configs/customer-support}"
 
 # Default port
-PORT="${PORT:-1338}"
+PORT="${PORT:-2338}"
 
 echo "Starting Customer Support on http://localhost:$PORT"
 echo "Config directory: $DYNAGENT_CONFIG_ROOT_DIR"

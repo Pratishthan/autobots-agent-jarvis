@@ -5,12 +5,13 @@ import os
 from typing import TYPE_CHECKING, Any
 
 import chainlit as cl
-from autobots_devtools_shared_lib.common.observability.logging_utils import (
+from autobots_devtools_shared_lib.common.observability import (
+    TraceMetadata,
+    flush_tracing,
     get_logger,
+    init_tracing,
     set_conversation_id,
 )
-from autobots_devtools_shared_lib.common.observability.trace_metadata import TraceMetadata
-from autobots_devtools_shared_lib.common.observability.tracing import flush_tracing, init_tracing
 from autobots_devtools_shared_lib.dynagent import create_base_agent
 from autobots_devtools_shared_lib.dynagent.ui import stream_agent_events
 from dotenv import load_dotenv

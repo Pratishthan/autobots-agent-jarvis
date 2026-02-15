@@ -2,18 +2,22 @@
 # ABOUT ME: for programmatic agent orchestration without UI dependencies.
 
 import asyncio
-from typing import Any
+import uuid
+from typing import TYPE_CHECKING
 
-from autobots_devtools_shared_lib.common.observability.logging_utils import (
+from autobots_devtools_shared_lib.common.observability import (
+    TraceMetadata,
     get_logger,
+    init_tracing,
     set_conversation_id,
 )
-from autobots_devtools_shared_lib.common.observability.trace_metadata import TraceMetadata
-from autobots_devtools_shared_lib.common.observability.tracing import init_tracing
 from autobots_devtools_shared_lib.dynagent import ainvoke_agent, invoke_agent
 from dotenv import load_dotenv
 
 from autobots_agents_jarvis.domains.concierge.tools import register_concierge_tools
+
+if TYPE_CHECKING:
+    from langchain_core.runnables import RunnableConfig
 
 logger = get_logger(__name__)
 load_dotenv()
@@ -21,6 +25,8 @@ load_dotenv()
 
 register_concierge_tools()
 init_tracing()
+
+APP_NAME = "concierge-invoke-demo"
 
 
 def call_invoke_agent_sync(
@@ -50,56 +56,51 @@ def call_invoke_agent_sync(
         >>> print(result["structured_response"])
     """
 
-    if session_id:
-        set_conversation_id(session_id)
-        logger.info(f"🔑 Using custom session_id: {session_id}")
+    if not session_id:
+        session_id = str(uuid.uuid4())
+    set_conversation_id(session_id)
 
-    logger.info(f"🔵 Starting SYNC invocation for agent: {agent_name}")
-    logger.info(f"📝 User message: {user_message}")
+    logger.info(f"🔑 Generated session_id: {session_id}")
 
-    # Prepare input state
-    input_state: dict[str, Any] = {}
-    input_state["messages"] = [{"role": "user", "content": user_message}]
+    config: RunnableConfig = {
+        "configurable": {
+            "thread_id": session_id,
+            "agent_name": agent_name,
+            "app_name": APP_NAME,
+        },
+    }
 
-    if session_id:
-        input_state["session_id"] = session_id
-        logger.info(f"🔑 Using custom session_id: {session_id}")
-
-    # Prepare config
-    config: dict[str, Any] = {}  # type: ignore[assignment]
-    config["configurable"] = {"thread_id": f"sync-{agent_name}-example"}
+    input_state: dict = {
+        "messages": [{"role": "user", "content": user_message}],
+        "agent_name": agent_name,
+        "session_id": session_id,
+    }
 
     # Prepare trace metadata
     trace_metadata = TraceMetadata(
-        session_id=session_id or TraceMetadata.create().session_id,
-        app_name="concierge-invoke-demo",
-        user_id="demo-user",
-        tags=["demo", "sync", agent_name],
+        session_id=session_id,
+        app_name=APP_NAME,
+        user_id=APP_NAME,
+        tags=[APP_NAME, agent_name, "sync"],
     )
 
-    # Invoke agent (agent will be created internally)
-    logger.info(f"🚀 Invoking agent '{agent_name}' synchronously...")
+    logger.info(f"Invoking SYNC agent '{agent_name}'")
     result = invoke_agent(
         agent_name=agent_name,
         input_state=input_state,
-        config=config,  # type: ignore
-        enable_tracing=enable_tracing,
+        config=config,
         trace_metadata=trace_metadata,
+        enable_tracing=enable_tracing,
     )
 
-    # Log results
-    logger.info(f"✅ SYNC invocation completed for agent: {agent_name}")
-    logger.info(f"📊 Messages in result: {len(result.get('messages', []))}")
+    messages = result.get("messages") or []
+    logger.debug(f"#Messages: {len(messages)}")
 
     if "structured_response" in result:
         logger.info("📦 Structured response received:")
         logger.info(f"   {result['structured_response']}")
     else:
         logger.info("💬 No structured response (text-only agent)")
-
-    # Log the last AI message
-    messages = result.get("messages", [])
-    logger.info(f"📨 Total messages in final state: {len(messages)}")
 
     return result
 
@@ -131,46 +132,45 @@ async def call_invoke_agent_async(
         >>> print(result["structured_response"])
     """
 
-    if session_id:
-        set_conversation_id(session_id)
-        logger.info(f"🔑 Using custom session_id: {session_id}")
+    if not session_id:
+        session_id = str(uuid.uuid4())
+    set_conversation_id(session_id)
 
-    logger.info(f"🟢 Starting ASYNC invocation for agent: {agent_name}")
-    logger.info(f"📝 User message: {user_message}")
+    logger.info(f"🔑 Generated session_id: {session_id}")
 
-    # Prepare input state
-    input_state: dict[str, Any] = {}
-    input_state["messages"] = [{"role": "user", "content": user_message}]
+    config: RunnableConfig = {
+        "configurable": {
+            "thread_id": session_id,
+            "agent_name": agent_name,
+            "app_name": APP_NAME,
+        },
+    }
 
-    if session_id:
-        input_state["session_id"] = session_id
-        logger.info(f"🔑 Using custom session_id: {session_id}")
-
-    # Prepare config
-    config: dict[str, Any] = {}  # type: ignore[assignment]
-    config["configurable"] = {"thread_id": f"async-{agent_name}-example"}
+    input_state: dict = {
+        "messages": [{"role": "user", "content": user_message}],
+        "agent_name": agent_name,
+        "session_id": session_id,
+    }
 
     # Prepare trace metadata
     trace_metadata = TraceMetadata(
-        session_id=session_id or TraceMetadata.create().session_id,
-        app_name="concierge-invoke-demo",
-        user_id="demo-user",
-        tags=["demo", "async", agent_name],
+        session_id=session_id,
+        app_name=APP_NAME,
+        user_id=APP_NAME,
+        tags=[APP_NAME, agent_name, "async"],
     )
 
-    # Invoke agent asynchronously (agent will be created internally)
-    logger.info(f"🚀 Invoking agent '{agent_name}' asynchronously...")
+    logger.info(f"Invoking ASYNC agent '{agent_name}'")
     result = await ainvoke_agent(
         agent_name=agent_name,
         input_state=input_state,
-        config=config,  # type: ignore
-        enable_tracing=enable_tracing,
+        config=config,
         trace_metadata=trace_metadata,
+        enable_tracing=enable_tracing,
     )
 
-    # Log results
-    logger.info(f"✅ ASYNC invocation completed for agent: {agent_name}")
-    logger.info(f"📊 Messages in result: {len(result.get('messages', []))}")
+    messages = result.get("messages") or []
+    logger.debug(f"#Messages: {len(messages)}")
 
     if "structured_response" in result:
         logger.info("📦 Structured response received:")
@@ -178,9 +178,6 @@ async def call_invoke_agent_async(
     else:
         logger.info("💬 No structured response (text-only agent)")
 
-    # Log the last AI message
-    messages = result.get("messages", [])
-    logger.info(f"📨 Total messages in final state: {len(messages)}")
     return result
 
 

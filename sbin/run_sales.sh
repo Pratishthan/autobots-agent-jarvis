@@ -14,7 +14,7 @@ cd "$PROJECT_ROOT"
 export DYNAGENT_CONFIG_ROOT_DIR="${DYNAGENT_CONFIG_ROOT_DIR:-agent_configs/sales}"
 
 # Default port
-PORT="${PORT:-1339}"
+PORT="${PORT:-2339}"
 
 echo "Starting Sales on http://localhost:$PORT"
 echo "Config directory: $DYNAGENT_CONFIG_ROOT_DIR"

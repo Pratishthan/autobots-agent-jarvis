@@ -2,10 +2,7 @@
 # ABOUTME: Wraps sales services for use by agents.
 
 
-from autobots_devtools_shared_lib.common.observability.logging_utils import (
-    get_logger,
-    set_conversation_id,
-)
+from autobots_devtools_shared_lib.common.observability import get_logger, set_conversation_id
 from autobots_devtools_shared_lib.dynagent import Dynagent
 from langchain.tools import ToolRuntime, tool
 
