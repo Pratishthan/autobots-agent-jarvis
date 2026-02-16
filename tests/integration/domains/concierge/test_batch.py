@@ -14,13 +14,13 @@ def setup_concierge(concierge_registered):
 def test_concierge_batch_invalid_agent():
     """Test that concierge_batch raises error for non-batch-enabled agents."""
     with pytest.raises(ValueError, match="not enabled for batch processing"):
-        concierge_batch("welcome_agent", ["test prompt"])
+        concierge_batch("welcome_agent", ["test prompt"], user_id="test_user")
 
 
 def test_concierge_batch_empty_records(concierge_registered):
     """Test that concierge_batch raises error for empty records."""
     with pytest.raises(ValueError, match="records must not be empty"):
-        concierge_batch("joke_agent", [])
+        concierge_batch("joke_agent", [], user_id="test_user")
 
 
 @pytest.mark.skipif(

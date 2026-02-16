@@ -76,7 +76,7 @@ async def test_invoke_async(concierge_registered):
 
 def test_batch(concierge_registered):
     """Sanity: batch_invoker via concierge_batch."""
-    result = concierge_batch("joke_agent", ["Tell me a joke"])
+    result = concierge_batch("joke_agent", ["Tell me a joke"], user_id="test_user")
     assert result.total == 1
     assert len(result.results) == 1
     assert result.results[0].success

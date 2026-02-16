@@ -1,7 +1,10 @@
 #!/bin/bash
 
-source .venv/bin/activate
+source ../.venv/bin/activate # MONOREPO
+# source .venv/bin/activate # STANDALONE
 source .env
+
+mkdir -p logs
 
 python -m uvicorn autobots_devtools_shared_lib.common.servers.fileserver.app:app \
     --reload \

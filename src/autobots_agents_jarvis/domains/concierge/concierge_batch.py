@@ -34,12 +34,13 @@ def _get_concierge_batch_agents() -> list[str]:
 # ---------------------------------------------------------------------------
 
 
-def concierge_batch(agent_name: str, records: list[str]) -> BatchResult:
+def concierge_batch(agent_name: str, records: list[str], user_id: str) -> BatchResult:
     """Run a batch through dynagent, gated to Concierge batch-enabled agents only.
 
     Args:
         agent_name: Must be a batch-enabled agent from agents.yaml.
         records:    Non-empty list of plain-string prompts.
+        user_id:    User ID for tracing.
 
     Returns:
         BatchResult forwarded from batch_invoker.
@@ -47,8 +48,11 @@ def concierge_batch(agent_name: str, records: list[str]) -> BatchResult:
     Raises:
         ValueError: If agent_name is not batch-enabled or records is empty.
     """
-    set_conversation_id(str(uuid.uuid4()))
-    logger.info(f"concierge_batch starting: agent={agent_name} records={len(records)}")
+    session_id = str(uuid.uuid4())
+    set_conversation_id(session_id)
+    logger.info(
+        f"concierge_batch starting: agent={agent_name} records={len(records)} user_id={user_id}"
+    )
 
     concierge_agents = _get_concierge_batch_agents()
 
@@ -63,18 +67,19 @@ def concierge_batch(agent_name: str, records: list[str]) -> BatchResult:
 
     init_tracing()
 
-    # Concierge entry logging
     trace_metadata = TraceMetadata.create(
-        app_name=f"{APP_NAME}-batch_invoker",
-        user_id="BATCH_USER",
+        session_id=session_id,
+        app_name=f"{APP_NAME}_{agent_name}-batch_invoker",
+        user_id=user_id,
         tags=[APP_NAME, agent_name, "batch"],
     )
-    set_conversation_id(agent_name)
 
-    # Delegate to batch_invoker with Concierge metadata
-    result = batch_invoker(agent_name, records, enable_tracing=True, trace_metadata=trace_metadata)
+    result = batch_invoker(
+        agent_name,
+        records,
+        trace_metadata=trace_metadata,
+    )
 
-    # Concierge exit logging
     logger.info(
         f"concierge_batch complete: agent={agent_name} successes={len(result.successes)} "
         f"failures={len(result.failures)}"
@@ -105,9 +110,9 @@ if __name__ == "__main__":
         "Can you tell me a funny joke about databases?",
     ]
 
-    batch_result = concierge_batch("joke_agent", smoke_prompts)
+    batch_result = concierge_batch("joke_agent", smoke_prompts, "BATCH_USER")
     for record in batch_result.results:
         if record.success:
-            print(f"Record {record.index} succeeded:\n{record.output}\n")
+            logger.info(f"Record {record.index} succeeded:\n{record.output}\n")
         else:
-            print(f"Record {record.index} failed:\n{record.error}\n")
+            logger.error(f"Record {record.index} failed:\n{record.error}\n")
